@@ -220,6 +220,15 @@ require("lazy").setup({
     end,
   },
 
+  -- Git conflict resolver - inline conflict picker (like VS Code)
+  {
+    "akinsho/git-conflict.nvim",
+    version = "*",
+    config = function()
+      require("git-conflict").setup()
+    end,
+  },
+
   -- Indent guides - vertical lines at each indent level
   {
     "lukas-reineke/indent-blankline.nvim",
