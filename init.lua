@@ -229,6 +229,38 @@ require("lazy").setup({
     end,
   },
 
+  -- Conform - auto-format on save (like prettier in VS Code)
+  {
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    config = function()
+      require("conform").setup({
+        formatters_by_ft = {
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          json = { "prettier" },
+          yaml = { "prettier" },
+          html = { "prettier" },
+          css = { "prettier" },
+          lua = { "stylua" },
+        },
+        format_on_save = {
+          timeout_ms = 2000,
+          lsp_format = "fallback",
+        },
+      })
+    end,
+  },
+
+  -- Trouble - pretty diagnostics panel (like VS Code's Problems tab)
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("trouble").setup()
+    end,
+  },
+
   -- Indent guides - vertical lines at each indent level
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -320,6 +352,11 @@ vim.g.mapleader = " "  -- Set space as leader key
 
 -- Toggle file tree with <leader>e
 vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true })
+
+-- Trouble keybindings
+vim.keymap.set('n', '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', { desc = "All diagnostics" })
+vim.keymap.set('n', '<leader>xd', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', { desc = "Buffer diagnostics" })
+vim.keymap.set('n', '<leader>xq', '<cmd>Trouble quickfix toggle<cr>', { desc = "Quickfix list" })
 
 -- Check treesitter status with <leader>ts
 vim.keymap.set('n', '<leader>ts', ':TSInstallInfo<CR>', { silent = true })
