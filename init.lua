@@ -48,22 +48,27 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Setup plugins
 require("lazy").setup({
-  -- File tree
+  -- File tree (neo-tree - richer UI with git status, buffers view, etc.)
   {
-    "nvim-tree/nvim-tree.lua",
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
     dependencies = {
-      "nvim-tree/nvim-web-devicons", -- File icons
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
     },
     config = function()
-      require("nvim-tree").setup({
-        view = {
+      require("neo-tree").setup({
+        close_if_last_window = true,
+        filesystem = {
+          follow_current_file = { enabled = true },
+          filtered_items = {
+            visible = true,
+            hide_dotfiles = false,
+          },
+        },
+        window = {
           width = 30,
-        },
-        filters = {
-          dotfiles = false,
-        },
-        update_focused_file = {
-          enable = true,
         },
       })
     end,
@@ -332,7 +337,7 @@ require("lazy").setup({
       require("tokyonight").setup({
         style = "night",
       })
-      vim.cmd([[colorscheme tokyonight]])
+      vim.cmd([[colorscheme tokyonight-night]])
     end,
   },
 }, {
@@ -363,7 +368,7 @@ vim.lsp.enable({ 'ts_ls', 'lua_ls', 'jsonls', 'yamlls' })
 vim.g.mapleader = " "  -- Set space as leader key
 
 -- Toggle file tree with <leader>e
-vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true })
+vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = "Toggle file tree" })
 
 -- Trouble keybindings
 vim.keymap.set('n', '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', { desc = "All diagnostics" })
