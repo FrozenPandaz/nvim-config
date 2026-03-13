@@ -63,8 +63,9 @@ require("lazy").setup({
         filesystem = {
           follow_current_file = { enabled = true },
           filtered_items = {
-            visible = true,
+            visible = false,
             hide_dotfiles = false,
+            hide_gitignored = true,
           },
         },
         window = {
@@ -72,6 +73,7 @@ require("lazy").setup({
           mappings = {
             ["<Right>"] = "open",
             ["<Left>"] = "close_node",
+            ["H"] = "toggle_hidden",
           },
         },
       })
@@ -482,6 +484,7 @@ vim.keymap.set('n', '<leader>/', function() require('Comment.api').toggle.linewi
 vim.keymap.set('v', '<leader>/', '<ESC><cmd>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', { desc = "Toggle comment" })
 
 -- Quick save/quit
+vim.keymap.set('n', 'q', '<cmd>q<CR>', { desc = "Quit" })
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = "Save" })
 vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = "Quit" })
 vim.keymap.set('n', '<leader>x', '<cmd>wq<CR>', { desc = "Save and quit" })
