@@ -241,6 +241,12 @@ require("lazy").setup({
     end,
   },
 
+  -- Lazygit - full git UI inside neovim (stage, commit, push, rebase, etc.)
+  {
+    "kdheepak/lazygit.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+  },
+
   -- Git conflict resolver - inline conflict picker (like VS Code)
   {
     "akinsho/git-conflict.nvim",
@@ -373,6 +379,9 @@ vim.g.mapleader = " "  -- Set space as leader key
 
 -- Toggle file tree with <leader>e
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = "Toggle file tree" })
+
+-- Lazygit
+vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<cr>', { desc = "Open LazyGit" })
 
 -- Trouble keybindings
 vim.keymap.set('n', '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', { desc = "All diagnostics" })
