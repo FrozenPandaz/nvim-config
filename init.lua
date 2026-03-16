@@ -9,6 +9,7 @@ vim.opt.shiftwidth = 2          -- Indent width
 vim.opt.expandtab = true        -- Use spaces instead of tabs
 vim.opt.termguicolors = true    -- Enable full color support
 vim.opt.clipboard = 'unnamedplus' -- Use system clipboard for yank/paste
+vim.opt.backupcopy = 'yes'        -- Overwrite file in-place (no atomic rename)
 vim.opt.hlsearch = true          -- Highlight search matches
 vim.opt.incsearch = true         -- Show matches while typing
 
