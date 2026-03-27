@@ -115,6 +115,8 @@ require("lazy").setup({
         defaults = {
           file_ignore_patterns = { "node_modules", ".git/", "build/", "dist/", "target/" },
           layout_config = {
+            width = 0.95,
+            height = 0.9,
             horizontal = {
               preview_width = 0.55,
             },
