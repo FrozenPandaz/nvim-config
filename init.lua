@@ -113,6 +113,7 @@ require("lazy").setup({
     config = function()
       require('telescope').setup({
         defaults = {
+          file_ignore_patterns = { "node_modules", ".git/", "build/", "dist/", "target/" },
           layout_config = {
             horizontal = {
               preview_width = 0.55,
