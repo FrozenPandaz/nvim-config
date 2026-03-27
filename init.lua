@@ -271,7 +271,7 @@ require("lazy").setup({
   -- Conform - auto-format on save (like prettier in VS Code)
   {
     "stevearc/conform.nvim",
-    event = "BufWritePre",
+    event = { "BufWritePre", "BufWritePost" },
     config = function()
       require("conform").setup({
         formatters_by_ft = {
@@ -283,8 +283,7 @@ require("lazy").setup({
           css = { "prettier" },
           lua = { "stylua" },
         },
-        format_on_save = {
-          timeout_ms = 2000,
+        format_after_save = {
           lsp_format = "fallback",
         },
       })
