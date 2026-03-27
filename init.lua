@@ -12,6 +12,7 @@ vim.opt.clipboard = 'unnamedplus' -- Use system clipboard for yank/paste
 vim.opt.backupcopy = 'yes'        -- Overwrite file in-place (no atomic rename)
 vim.opt.hlsearch = true          -- Highlight search matches
 vim.opt.incsearch = true         -- Show matches while typing
+vim.opt.inccommand = 'split'     -- Live preview of :s replacements in a split
 
 -- Folding settings - use indent-based folding (simpler, always works)
 vim.opt.foldmethod = 'indent'
@@ -21,7 +22,7 @@ vim.opt.foldlevelstart = 99     -- Start with all folds open
 
 -- Switch to treesitter folding after it loads (if available)
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "typescript", "javascript", "lua", "rust", "python", "json" },
+  pattern = { "typescript", "javascript", "lua", "rust", "python", "json", "java", "kotlin" },
   callback = function()
     local has_ts, _ = pcall(vim.treesitter.get_parser)
     if has_ts then
@@ -106,6 +107,7 @@ require("lazy").setup({
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope-ui-select.nvim',
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     },
     config = function()
       require('telescope').setup({
@@ -120,8 +122,14 @@ require("lazy").setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+          },
         },
       })
+      require('telescope').load_extension('fzf')
       require('telescope').load_extension('ui-select')
     end,
   },
@@ -150,7 +158,7 @@ require("lazy").setup({
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "ts_ls", "lua_ls", "jsonls", "yamlls" },
+        ensure_installed = { "ts_ls", "lua_ls", "jsonls", "yamlls", "rust_analyzer", "jdtls", "kotlin_language_server", "lemminx" },
       })
     end,
   },
@@ -307,6 +315,14 @@ require("lazy").setup({
   -- Multi-cursor (Ctrl-n to select next occurrence, like Cmd+D in VS Code)
   { "mg979/vim-visual-multi", branch = "master" },
 
+  -- Grug-far - modern search and replace UI (like VS Code's find/replace panel)
+  {
+    "MagicDuck/grug-far.nvim",
+    config = function()
+      require("grug-far").setup()
+    end,
+  },
+
   -- Autopairs - auto-close brackets, quotes, etc.
   {
     "windwp/nvim-autopairs",
@@ -375,8 +391,12 @@ vim.lsp.config('lua_ls', {
 })
 vim.lsp.config('jsonls', { capabilities = capabilities })
 vim.lsp.config('yamlls', { capabilities = capabilities })
+vim.lsp.config('rust_analyzer', { capabilities = capabilities })
+vim.lsp.config('jdtls', { capabilities = capabilities })
+vim.lsp.config('kotlin_language_server', { capabilities = capabilities })
+vim.lsp.config('lemminx', { capabilities = capabilities })
 
-vim.lsp.enable({ 'ts_ls', 'lua_ls', 'jsonls', 'yamlls' })
+vim.lsp.enable({ 'ts_ls', 'lua_ls', 'jsonls', 'yamlls', 'rust_analyzer', 'jdtls', 'kotlin_language_server', 'lemminx' })
 
 -- Keybindings
 vim.g.mapleader = " "  -- Set space as leader key
@@ -407,6 +427,12 @@ vim.keymap.set('n', '<leader>fz', function()
   vim.opt.foldenable = not vim.opt.foldenable:get()
   print("Folding: " .. (vim.opt.foldenable:get() and "enabled" or "disabled"))
 end, { desc = "Toggle folding" })
+
+-- Search and replace
+vim.keymap.set('n', '<leader>sr', '<cmd>GrugFar<cr>', { desc = "Search and replace" })
+vim.keymap.set('v', '<leader>sr', function()
+  require('grug-far').with_visual_selection()
+end, { desc = "Search and replace (selection)" })
 
 -- Clear search highlighting
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = "Clear search highlight" })
