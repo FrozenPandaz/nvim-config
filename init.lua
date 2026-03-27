@@ -13,6 +13,7 @@ vim.opt.backupcopy = 'yes'        -- Overwrite file in-place (no atomic rename)
 vim.opt.hlsearch = true          -- Highlight search matches
 vim.opt.incsearch = true         -- Show matches while typing
 vim.opt.inccommand = 'split'     -- Live preview of :s replacements in a split
+vim.opt.updatetime = 1000        -- Trigger CursorHold after 1s of idle
 
 -- Folding settings - use indent-based folding (simpler, always works)
 vim.opt.foldmethod = 'indent'
@@ -432,6 +433,15 @@ vim.keymap.set('n', '<leader>sr', '<cmd>GrugFar<cr>', { desc = "Search and repla
 vim.keymap.set('v', '<leader>sr', function()
   require('grug-far').with_visual_selection()
 end, { desc = "Search and replace (selection)" })
+
+-- Auto-save when idle, switching buffers, or losing focus
+vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI", "FocusLost", "BufLeave" }, {
+  callback = function()
+    if vim.bo.modified and vim.bo.buftype == "" then
+      vim.cmd("silent! w")
+    end
+  end,
+})
 
 -- Clear search highlighting
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = "Clear search highlight" })
