@@ -36,6 +36,9 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Set leader key BEFORE lazy.nvim so plugin keybindings use Space
+vim.g.mapleader = " "
+
 -- Bootstrap lazy.nvim plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -276,24 +279,16 @@ require("lazy").setup({
   {
     "ruifm/gitlinker.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("gitlinker").setup({
-        callbacks = {
-          ["github.com"] = require("gitlinker.hosts").get_github_type_url,
-        },
-        mappings = nil, -- we'll set our own below
-      })
-      local function copy_link(mode)
-        require("gitlinker").get_buf_range_url(mode, {
-          action_callback = function(url)
-            vim.fn.system("pbcopy", url)
-            vim.notify("Copied: " .. url, vim.log.levels.INFO)
-          end,
-        })
-      end
-      vim.keymap.set('n', '<leader>cl', function() copy_link('n') end, { desc = "Copy GitHub link" })
-      vim.keymap.set('v', '<leader>cl', function() copy_link('v') end, { desc = "Copy GitHub link (range)" })
-    end,
+    keys = {
+      { "<leader>cl", function()
+        require("gitlinker").setup({ callbacks = { ["github.com"] = require("gitlinker.hosts").get_github_type_url }, mappings = nil })
+        require("gitlinker").get_buf_range_url("n", { action_callback = function(url) vim.fn.system("pbcopy", url); vim.notify("Copied: " .. url) end })
+      end, desc = "Copy GitHub link" },
+      { "<leader>cl", function()
+        require("gitlinker").setup({ callbacks = { ["github.com"] = require("gitlinker.hosts").get_github_type_url }, mappings = nil })
+        require("gitlinker").get_buf_range_url("v", { action_callback = function(url) vim.fn.system("pbcopy", url); vim.notify("Copied: " .. url) end })
+      end, mode = "v", desc = "Copy GitHub link (range)" },
+    },
   },
 
   -- Conform - auto-format on save (like prettier in VS Code)
@@ -426,8 +421,7 @@ vim.lsp.config('lemminx', { capabilities = capabilities })
 
 vim.lsp.enable({ 'ts_ls', 'lua_ls', 'jsonls', 'yamlls', 'rust_analyzer', 'jdtls', 'kotlin_language_server', 'lemminx' })
 
--- Keybindings
-vim.g.mapleader = " "  -- Set space as leader key
+-- Keybindings (leader key is set above, before lazy.nvim)
 
 -- Toggle file tree with <leader>e
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = "Toggle file tree" })
