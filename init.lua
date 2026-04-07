@@ -272,6 +272,15 @@ require("lazy").setup({
     end,
   },
 
+  -- Gitlinker - copy GitHub permalink for current line/selection
+  {
+    "ruifm/gitlinker.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("gitlinker").setup()
+    end,
+  },
+
   -- Conform - auto-format on save (like prettier in VS Code)
   {
     "stevearc/conform.nvim",
@@ -357,6 +366,7 @@ require("lazy").setup({
       wk.add({
         { "<leader>f", group = "Find" },
         { "<leader>c", group = "Code" },
+        { "<leader>g", group = "Git" },
       })
     end,
   },
