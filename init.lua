@@ -277,7 +277,22 @@ require("lazy").setup({
     "ruifm/gitlinker.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("gitlinker").setup()
+      require("gitlinker").setup({
+        callbacks = {
+          ["github.com"] = require("gitlinker.hosts").get_github_type_url,
+        },
+        mappings = nil, -- we'll set our own below
+      })
+      local function copy_link(mode)
+        require("gitlinker").get_buf_range_url(mode, {
+          action_callback = function(url)
+            vim.fn.system("pbcopy", url)
+            vim.notify("Copied: " .. url, vim.log.levels.INFO)
+          end,
+        })
+      end
+      vim.keymap.set('n', '<leader>gy', function() copy_link('n') end, { desc = "Copy GitHub link" })
+      vim.keymap.set('v', '<leader>gy', function() copy_link('v') end, { desc = "Copy GitHub link (range)" })
     end,
   },
 
