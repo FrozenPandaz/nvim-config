@@ -291,8 +291,8 @@ require("lazy").setup({
           end,
         })
       end
-      vim.keymap.set('n', '<leader>gy', function() copy_link('n') end, { desc = "Copy GitHub link" })
-      vim.keymap.set('v', '<leader>gy', function() copy_link('v') end, { desc = "Copy GitHub link (range)" })
+      vim.keymap.set('n', '<leader>cl', function() copy_link('n') end, { desc = "Copy GitHub link" })
+      vim.keymap.set('v', '<leader>cl', function() copy_link('v') end, { desc = "Copy GitHub link (range)" })
     end,
   },
 
